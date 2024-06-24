@@ -13,9 +13,19 @@ function compileCpp(code, fileName) {
         output += data.toString();
         document.getElementById('codeOutput').innerText = output;
     }
-
-    // Execute compilation process using provided CMakeLists.txt and cmake
-    const cmake = spawn('/opt/homebrew/bin/cmake', ['-S', '.', '-B', 'build'], { cwd: parentDir });
+    
+    const cmakeArgs = [
+        '-DCMAKE_BUILD_TYPE:STRING=Debug',
+        '-DCMAKE_C_COMPILER:FILTEPATH=C:/MinGW/bin/gcc.exe',
+        '-DCMAKE_CXX_COMPILER:FILEPATH=C:/MinGW/bin/g++.exe',
+        '-DCMAKE_ASM_COMPILER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33/bin/Hostx86/x86/cl.exe',
+        '-S', '.',
+        '-B', 'build',
+        '-G', 'Ninja'
+    ];
+    
+    // Spawn the cmake process
+    const cmake = spawn('cmake', cmakeArgs, {cwd: parentDir});
 
     cmake.stdout.on('data', (data) => {
         console.log(`cmake stdout: ${data}`);
@@ -36,7 +46,7 @@ function compileCpp(code, fileName) {
 
             // Execute build process using cmake --build
             const buildDir = path.resolve(parentDir, 'build');
-            const make = spawn('/opt/homebrew/bin/cmake', ['--build', buildDir], { cwd: parentDir });
+            const make = spawn('cmake', ['--build', buildDir], { cwd: parentDir });
 
             make.stdout.on('data', (data) => {
                 console.log(`make stdout: ${data}`);
