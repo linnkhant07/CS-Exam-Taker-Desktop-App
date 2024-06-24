@@ -5,18 +5,8 @@ const path = require('path');
 function compileCpp(code, fileName) {
     const parentDir = path.resolve(__dirname, '..');
 
-    const cmakeArgs = [
-        '-DCMAKE_BUILD_TYPE:STRING=Debug',
-        '-DCMAKE_C_COMPILER:FILTEPATH=C:/MinGW/bin/gcc.exe',
-        '-DCMAKE_CXX_COMPILER:FILEPATH=C:/MinGW/bin/g++.exe',
-        '-DCMAKE_ASM_COMPILER:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.33/bin/Hostx86/x86/cl.exe',
-        '-S', '.',
-        '-B', 'build',
-        '-G', 'Ninja'
-    ];
-    
-    // Spawn the cmake process
-    const cmake = spawn('cmake', cmakeArgs, {cwd: parentDir});
+    // Execute compilation process using provided CMakeLists.txt and cmake
+    const cmake = spawn('/opt/homebrew/bin/cmake', ['-S', '.', '-B', 'build'], { cwd: parentDir });
 
     cmake.stdout.on('data', (data) => {
         console.log(`cmake stdout: ${data}`);
@@ -32,16 +22,14 @@ function compileCpp(code, fileName) {
 
             // Execute build process using cmake --build
             const buildDir = path.resolve(parentDir, 'build');
-            const make = spawn('cmake', ['--build', 'build'], { cwd: parentDir });
+            const make = spawn('/opt/homebrew/bin/cmake', ['--build', buildDir], { cwd: parentDir });
 
             make.stdout.on('data', (data) => {
                 console.log(`make stdout: ${data}`);
-                document.getElementById('codeOutput').innerText = data.toString();
             });
 
             make.stderr.on('data', (data) => {
                 console.error(`make stderr: ${data}`);
-                document.getElementById('codeOutput').innerText = data.toString();
             });
 
             make.on('close', (code) => {
@@ -49,7 +37,7 @@ function compileCpp(code, fileName) {
                     console.log('Build successful! Now running the compiled program');
 
                     // Execute the compiled program
-                    const compiledProgram = spawn(path.join(buildDir, fileName), [], { cwd: parentDir });
+                    const compiledProgram = spawn(path.join(buildDir, 'bin', fileName), [], { cwd: parentDir });
 
                     let output = '';
                     compiledProgram.stdout.on('data', (data) => {
@@ -59,7 +47,6 @@ function compileCpp(code, fileName) {
 
                     compiledProgram.stderr.on('data', (data) => {
                         console.error(`Program error: ${data}`);
-                        output += data.toString();
                     });
 
                     compiledProgram.on('close', (code) => {

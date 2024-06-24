@@ -43,7 +43,7 @@ editor = ace.edit(editor, {
 document.addEventListener('DOMContentLoaded', async ()=>{
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch('../_tests/_test_files/testB.cpp');
+        const response = await fetch('../_tests/_test_files/basic_test.cpp');
         if (!response.ok) {
             throw new Error('Failed to fetch testB.cpp');
         }
@@ -60,6 +60,27 @@ document.addEventListener('DOMContentLoaded', async ()=>{
     }
 })
 
+const btnBasicTest = document.getElementById("btnBasicTest")
+btnBasicTest.addEventListener('click', async () => {
+    lastClick = "btnBasicTest";
+    try {
+        // Fetch the content of basic_test.cpp
+        const response = await fetch('../_tests/_test_files/basic_test.cpp');
+        if (!response.ok) {
+            throw new Error('Failed to fetch baisc_test.cpp');
+        }
+        const basicTestCode = await response.text();
+
+        //console.log(testBCode);
+        // Set the content of the Ace editor to the fetched code
+        editor.setValue(basicTestCode);
+        // Move the cursor to the beginning of the document
+        editor.moveCursorToPosition({ row: 0, column: 0 });
+    } catch (error) {
+        console.error(error);
+        // Handle errors, such as displaying an error message to the user
+    }
+});
 
 const btnTestB = document.getElementById("btnTestB")
 btnTestB.addEventListener('click', async () => {
@@ -83,68 +104,27 @@ btnTestB.addEventListener('click', async () => {
     }
 });
 
-const btnASM = document.getElementById("btnASM")
-btnASM.addEventListener('click', async () => {
-    lastClick = "btnASM";
-    try {
-        // Fetch the content of basic_test.cpp
-        const response = await fetch('../includes/asm_files/functions.asm');
-        if (!response.ok) {
-            throw new Error('Failed to fetch function.asm');
-        }
-        const testBCode = await response.text();
 
-        //console.log(testBCode);
-        // Set the content of the Ace editor to the fetched code
-        editor.setValue(testBCode);
-        // Move the cursor to the beginning of the document
-        editor.moveCursorToPosition({ row: 0, column: 0 });
-    } catch (error) {
-        console.error(error);
-        // Handle errors, such as displaying an error message to the user
+document.getElementById('saveTestB').addEventListener('click', () => {
+    
+    if(lastClick === 'btnTestB'){
+        const code = editor.getValue();
+    console.log('Save Test B Save Button Clicked');
+    ipcRenderer.send('save-test-B', code);
+    }
+    else{
+        alert('Please click testB.asm before saving asm file.')
     }
 });
 
-    document.getElementById('saveASM').addEventListener('click', () => {
-       if(lastClick === 'btnASM')
-        { const code = editor.getValue();
-        console.log('ASM Save Button Clicked');
-        ipcRenderer.send('save-ASM', code);
-        }
-        else{
-            alert('Please click functions.asm before saving asm file.')
-        }
-    });
-
-    ipcRenderer.on('save-ASM-reply', (event, message) => {
-        console.log('Received save-code-reply:', message);
-        if (message === 'success') {
-            console.log('ASM code saved successfully');
-        } else {
-            console.error('Failed to save ASM code');
-        }
-    });
-
-    document.getElementById('saveTestB').addEventListener('click', () => {
-        
-        if(lastClick === 'btnTestB'){
-            const code = editor.getValue();
-        console.log('Save Test B Save Button Clicked');
-        ipcRenderer.send('save-test-B', code);
-        }
-        else{
-            alert('Please click testB.asm before saving asm file.')
-        }
-    });
-
-    ipcRenderer.on('save-testB-reply', (event, message) => {
-        console.log('Received save-code-reply:', message);
-        if (message === 'success') {
-            console.log('TestB code saved successfully');
-        } else {
-            console.error('Failed to save TestB code');
-        }
-    });
+ipcRenderer.on('save-testB-reply', (event, message) => {
+    console.log('Received save-code-reply:', message);
+    if (message === 'success') {
+        console.log('TestB code saved successfully');
+    } else {
+        console.error('Failed to save TestB code');
+    }
+});
 
 
 
