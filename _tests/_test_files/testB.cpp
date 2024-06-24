@@ -8,6 +8,7 @@ using namespace std;
 
 bool test_term_operators(bool debug = false)
 {
+    //test-error
     // also test for CTORs
     Term t1(3.0, 2);
     Term t2(4.0, 2);

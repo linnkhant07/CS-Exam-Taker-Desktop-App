@@ -4,19 +4,33 @@ const path = require('path');
 
 function compileCpp(code, fileName) {
     const parentDir = path.resolve(__dirname, '..');
+    let output = '';
+
+    function clearOutput(){
+        output = '';
+    }
+    function updateOutput(data) {
+        output += data.toString();
+        document.getElementById('codeOutput').innerText = output;
+    }
 
     // Execute compilation process using provided CMakeLists.txt and cmake
     const cmake = spawn('/opt/homebrew/bin/cmake', ['-S', '.', '-B', 'build'], { cwd: parentDir });
 
     cmake.stdout.on('data', (data) => {
         console.log(`cmake stdout: ${data}`);
+        updateOutput(data);
     });
 
     cmake.stderr.on('data', (data) => {
         console.error(`cmake stderr: ${data}`);
+        updateOutput(data);
     });
 
+
     cmake.on('close', (code) => {
+
+        clearOutput();
         if (code === 0) {
             console.log('CMake configuration successful! Now trying to run the build');
 
@@ -26,41 +40,44 @@ function compileCpp(code, fileName) {
 
             make.stdout.on('data', (data) => {
                 console.log(`make stdout: ${data}`);
+                updateOutput(data);
             });
 
             make.stderr.on('data', (data) => {
                 console.error(`make stderr: ${data}`);
+                updateOutput(data);
             });
 
             make.on('close', (code) => {
                 if (code === 0) {
                     console.log('Build successful! Now running the compiled program');
+                    clearOutput();
 
                     // Execute the compiled program
                     const compiledProgram = spawn(path.join(buildDir, 'bin', fileName), [], { cwd: parentDir });
 
-                    let output = '';
                     compiledProgram.stdout.on('data', (data) => {
                         console.log(`Program output: ${data}`);
-                        output += data.toString();
+                        updateOutput(data);
                     });
 
                     compiledProgram.stderr.on('data', (data) => {
                         console.error(`Program error: ${data}`);
+                        updateOutput(data);
                     });
 
                     compiledProgram.on('close', (code) => {
                         console.log(`Program exited with code ${code}`);
-                        // Display the program output
-                        console.log("program output is", output);
-                        document.getElementById('codeOutput').innerText = output;
                     });
                 } else {
                     console.error(`Build failed with code ${code}`);
+                    updateOutput(`Build failed with code ${code}`);
                 }
             });
         } else {
+            clearOutput();
             console.error(`CMake configuration failed with code ${code}`);
+            updateOutput(`CMake configuration failed with code ${code}`);
         }
     });
 }
