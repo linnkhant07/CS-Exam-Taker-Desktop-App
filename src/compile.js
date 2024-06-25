@@ -14,6 +14,7 @@ function compileCpp(code, fileName) {
         document.getElementById('codeOutput').innerText = output;
     }
     
+    /*
     const cmakeArgs = [
         '-DCMAKE_BUILD_TYPE:STRING=Debug',
         '-DCMAKE_C_COMPILER:FILTEPATH=C:/MinGW/bin/gcc.exe',
@@ -22,7 +23,12 @@ function compileCpp(code, fileName) {
         '-S', '.',
         '-B', 'build',
         '-G', 'Ninja'
-    ];
+    ];*/
+
+    const cmakeArgs = [
+        '-S', '.',
+        '-B', 'build'
+    ]
     
     // Spawn the cmake process
     const cmake = spawn('cmake', cmakeArgs, {cwd: parentDir});
