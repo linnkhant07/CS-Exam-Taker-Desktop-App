@@ -117,6 +117,21 @@ ipcMain.on('save-test-B', (event,code)=>{
     // Run the compile function
 });
 });
+
+ipcMain.on('save-student-file', (event,code)=>{
+  const filePath = path.join(__dirname, '../includes/poly/poly_student.cpp');
+  fs.writeFile(filePath, code, (err) => {
+    if (err) {
+        console.error('Failed to save file', err);
+        event.reply('save-student-file-reply', 'fail');
+        return;
+    }
+    console.log('File saved successfully');
+    event.reply('save-student-file-reply', 'success');
+
+    // Run the compile function
+});
+});
   /*
   // Create a BrowserView
   const browserView = new BrowserView();

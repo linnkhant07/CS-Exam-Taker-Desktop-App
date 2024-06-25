@@ -50,25 +50,25 @@ enable_testing()
 #   Grab all CPP files from includes folder
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 set(CPP_INCLUDES_FOLDER includes)
-# FILE(GLOB_RECURSE CPP_SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}   "${CPP_INCLUDES_FOLDER}/*.cpp" )
+FILE(GLOB_RECURSE CPP_SOURCE_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "${CPP_INCLUDES_FOLDER}/*.cpp" )
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-set(CPP_SOURCE_FILES
-    includes/obj_files/poly.cpp.o
-    includes/obj_files/term.cpp.o
-    #includes/array_functions/array_functions.h
-   # Add more object files as needed
-)
+# set(CPP_SOURCE_FILES
+#     includes/obj_files/poly.cpp.o
+#     includes/obj_files/term.cpp.o
+#     #includes/array_functions/array_functions.h
+#    # Add more object files as needed
+# )
 
 
 # Add source to this project's executable.
 ADD_EXECUTABLE(basic_test
-    _tests/_test_files/basic_test.cpp.o
+    _tests/_test_files/basic_test.cpp
     ${CPP_SOURCE_FILES}
 
 )
 ADD_EXECUTABLE(testB
-    _tests/_test_files/testB.cpp.o
+    _tests/_test_files/testB.cpp
     ${CPP_SOURCE_FILES}
 
 )

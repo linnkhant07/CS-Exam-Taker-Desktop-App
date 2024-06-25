@@ -104,6 +104,28 @@ btnTestB.addEventListener('click', async () => {
     }
 });
 
+const btnStudentFile = document.getElementById("btnStudentFile")
+btnStudentFile.addEventListener('click', async () => {
+    lastClick = "btnStudentFile";
+    try {
+        // Fetch the content of basic_test.cpp
+        const response = await fetch('../includes/poly/poly_student.cpp');
+        if (!response.ok) {
+            throw new Error('Failed to fetch poly_student.cpp');
+        }
+        const testBCode = await response.text();
+
+        //console.log(testBCode);
+        // Set the content of the Ace editor to the fetched code
+        editor.setValue(testBCode);
+        // Move the cursor to the beginning of the document
+        editor.moveCursorToPosition({ row: 0, column: 0 });
+    } catch (error) {
+        console.error(error);
+        // Handle errors, such as displaying an error message to the user
+    }
+});
+
 
 document.getElementById('saveTestB').addEventListener('click', () => {
     
@@ -113,7 +135,7 @@ document.getElementById('saveTestB').addEventListener('click', () => {
     ipcRenderer.send('save-test-B', code);
     }
     else{
-        alert('Please click testB.asm before saving asm file.')
+        alert('Please click testB.cpp before saving cpp file.')
     }
 });
 
@@ -123,6 +145,27 @@ ipcRenderer.on('save-testB-reply', (event, message) => {
         console.log('TestB code saved successfully');
     } else {
         console.error('Failed to save TestB code');
+    }
+});
+
+document.getElementById('saveStudentFile').addEventListener('click', () => {
+    
+    if(lastClick === 'btnStudentFile'){
+        const code = editor.getValue();
+    console.log('Save Student File Button Clicked');
+    ipcRenderer.send('save-student-file', code);
+    }
+    else{
+        alert('Please click your cpp file before saving.')
+    }
+});
+
+ipcRenderer.on('save-student-file-reply', (event, message) => {
+    console.log('Received save-code-reply:', message);
+    if (message === 'success') {
+        console.log('The student\'s code was saved successfully');
+    } else {
+        console.error('Failed to save the student\'s code');
     }
 });
 

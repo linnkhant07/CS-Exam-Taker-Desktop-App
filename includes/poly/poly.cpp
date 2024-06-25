@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 #include <math.h>
-#include "term.h"
 #include "poly.h"
 #include "../array_functions/array_functions.h"
 
@@ -268,12 +267,6 @@ Poly operator/(const Poly &lhs, const Poly &rhs)
 
     result.fix_order();
     return result;
-}
-
-Poly operator%(const Poly &lhs, const Poly &rhs)
-{
-    Poly div = lhs / rhs;
-    return lhs - div * rhs;
 }
 
 ostream &operator<<(ostream &outs, const Poly &p)
