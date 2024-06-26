@@ -12,6 +12,7 @@ using namespace std;
 Poly operator%(const Poly &lhs, const Poly &rhs)
 {
     // student has to write this
+    
     /*
     Poly div = lhs / rhs;
     return lhs - div * rhs;*/
