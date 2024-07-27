@@ -35,8 +35,12 @@
   "dependencies": {
     "codemirror": "^6.0.1",
     "electron-squirrel-startup": "^1.0.0",
+    "fs": "^0.0.1-security",
     "monaco-editor": "^0.47.0",
     "nodemailer": "^6.9.14",
+    "path": "^0.12.7",
+    "rimraf": "^6.0.1",
+    "simple-git": "^3.25.0",
     "update-electron-app": "^3.0.0"
   }
 }
