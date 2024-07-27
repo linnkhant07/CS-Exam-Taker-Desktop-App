@@ -53,6 +53,6 @@ async function cloneAllRepos() {
     }
 }
 
-cloneAllRepos();
+module.exports = cloneAllRepos;
 
 
