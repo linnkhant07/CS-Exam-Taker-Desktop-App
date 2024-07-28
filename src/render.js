@@ -252,9 +252,4 @@ ipcRenderer.on('focus-app', () => {
 })
 
 
-/*
-// Call the initializeEditor function when the DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    initializeEditor();
-  });*/
 

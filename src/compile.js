@@ -39,6 +39,7 @@ function compileCpp(fileName) {
         });
     }
 
+    // IMPORTANT: for deployment and packaging, specify the complete path for cmake
     return runCommand('cmake', ['-S', '.', '-B', 'build'], parentDir)
         .then(() => {
             clearOutput();

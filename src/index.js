@@ -30,13 +30,9 @@ async function main() {
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
         app.quit();
-        globalShortcut.unregisterAll();
       }
     });
 
-    app.on('will-quit', () => {
-      globalShortcut.unregisterAll();
-    });
   } catch (error) {
     console.error('Error during initialization:', error);
     app.quit();
@@ -47,7 +43,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1600,
     height: 1000,
-    kiosk: false, // Comment this out if it is too annoying
+    kiosk: true, // Comment this out if it is too annoying
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -69,7 +65,8 @@ function createWindow() {
   ipcMain.on('exit-app', () => mainWindow.destroy());
 
   ipcMain.on('save-test-B', (event, code) => saveFile(event, code, '../_tests/_test_files/testB.cpp', 'save-testB-reply'));
-  ipcMain.on('save-student-file', (event, code) => saveFile(event, code, '../includes/poly/poly_student.cpp', 'save-student-file-reply'));
+  // NEEDS TO BE DYNAMIC
+  ipcMain.on('save-student-file', (event, code) => saveFile(event, code, `../includes/${process.env.STUDENT_SAVE_FILE}`, 'save-student-file-reply'));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
