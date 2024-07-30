@@ -1,282 +1,334 @@
 #ifndef ARRAY_FUNCTIONS_H
 #define ARRAY_FUNCTIONS_H
-#include "assert.h"
-#include <iostream>
-#include <string>
 
+#include "array_functions.h"
+#include <typeinfo>
+#include "iomanip"
+#include "iostream"
+#include "string.h"
+#include <cassert>
 using namespace std;
 
 const int MINIMUM_CAPACITY = 3;
 
-// precondition: a pointer has been created to be assigned a dynamic array
 template <class T>
-T *allocate(int capacity = MINIMUM_CAPACITY)
-{
-    // create a dynamic array of size "capacity"
-    T *arr = new T[capacity];
+T *allocate(int capacity = MINIMUM_CAPACITY); // allocate 'capacity'
+                                              //       elements.
+                                              //   return array
 
-    return arr; // return the pointer to that dynamic array
-}
-// postcondition: the pointer has been created
-
-// precondition: source array and dynamic have been created
 template <class T>
-void copy_array(T *dest, const T *src, int many_to_copy)
+T *reallocate(T *a, int size, int capacity); // take array, resize it
+                                             //   return new array.
+                                             //   delete old array
+
+template <class T>
+void print_array(T *a, int size, int capacity = 0, ostream &outs = cout); // prints
+                                                                          //   (size/capacity)
+                                                                          //   for debugging
+
+template <class T>
+void print(T *a, unsigned int how_many,
+           ostream &outs = cout); // print array
+
+template <class T>
+T *search_entry(T *a, int size, const T &find_me); // search for 'find me'
+
+template <class T>
+int search(T *a, int size, const T &find_me); // search for 'find_me'
+
+template <class T>
+void shift_left(T *a, int &size, int shift_here); // shift left @ pos:
+                                                  //     erases @ pos
+template <class T>
+void shift_left(T *a, int &size, T *shift_here); // shift left @ pos:
+                                                 //     erases @ pos
+
+template <class T>
+void shift_right(T *a, int &size, int shift_here); // shift right:
+                                                   //       make a hole
+
+template <class T>
+void shift_right(T *a, int &size, T *shift_here); // shift right:
+                                                  //    make a hole
+
+template <class T>
+void copy_array(T *dest, const T *src, int many_to_copy); // copy from src to dest
+
+template <class T>
+T *copy_array(const T *src, int size); // return a
+//  copy of src
+template <class T>
+void append(T *a, int &size, T append_me);
+
+template <class T>
+string array_string(const T *a, int size); // return array
+                                           //   as a string
+//========================================================================
+//! TEST PURPOSE
+//========================================================================
+//========================================================================
+
+template <class T>
+void filler(int size, T *a);
+
+template <class T>
+void filler2(int size, T *a, char whole);
+
+template <class T>
+bool comparing(T *list, T *a, int size);
+
+//========================================================================
+
+template <class T>
+void filler(int size, T *a)
 {
-    // create a walker that points to the start of the src array
-    const T *walker_src = src;
-
-    // create a walker that points to the start of the dest array
-    T *walker_dest = dest;
-
-    // iterate through the arrays
-    for (int i = 0; i < many_to_copy; i++, walker_src++, walker_dest++)
+    T *walkman = a;
+    for (int i = 0; i < size; i++, walkman++)
     {
-        *walker_dest = *walker_src; // anything at src will be assigned to
-                                    // the variable walker_dest is pointing at
+        *walkman = i;
     }
 }
-// postcondition: the elements of source array have been copied to destination array
 
-// precondition: a dynamic array has been initialzied
+template <class T>
+void filler2(int size, T *a, char whole)
+{
+    T *walkman = a;
+    for (int i = 0; i < size; i++, walkman++)
+    {
+        *walkman = whole;
+    }
+}
+
+template <class T>
+bool comparing(T *list, T *a, int size)
+{
+    T *walkman = list;
+    T *b = a;
+    for (int i = 0; i < size; i++, walkman++, b++)
+    {
+        if (*a != *list)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+//========================================================================
+//========================================================================
+
+template <class T>
+T *allocate(int capacity)
+{
+    assert(capacity != 0);
+    T *a = new T[capacity];
+    // bool debug = false;
+    // if (debug){
+    // T*walkman=a;
+    // int size =5;
+    // for (int i = 0; i < size ; i++)
+    // {
+    //     *walkman=i;
+    //     walkman++;
+    // }
+    // }
+
+    return a;
+} // allocate 'capacity'
+  //       elements.
+  //   return array
+
 template <class T>
 T *reallocate(T *a, int size, int capacity)
 {
-    T *arr_new = allocate<T>(capacity); // create a new dynamic array of size "capacity"
-    copy_array(arr_new, a, size);       // copy the src array into the new array
+    assert(capacity != 0);
+    T *b = allocate<T>(capacity);
 
-    // tweak just for this assignment
-    // fill the empty spaces with '0'
-    for (int i = size; i < capacity; i++)
-    {
-        double *walker = arr_new + i;
-        *walker = 0;
-    }
+    copy_array(b, a, size);
 
-    // delete the src array
     delete[] a;
+    return b;
+} // take array, resize it
+  //   return new array.
+  //   delete old array
 
-    return arr_new; // return the pointer to the new array
-}
-// postcondition: the dynamic array has been resized to size 'capacity'
-
-// precondition: an array has been created
 template <class T>
-void print_array(T *a, int size, int capacity = 0)
+void print_array(T *a, int size, int capacity, ostream &outs)
 {
+    //! dumb assumption
+    // TODO has to be changed after consultation
+    cout << " {  " << size << "/" << capacity;
+    print(a, size);
+    cout << "  }";
+    cout << "\n";
+} // prints
+  //   (size/capacity)
+  //   for debugging
 
-    // create a walker that points to the start of the array
-    T *walker = a;
-
-    cout << "(" << size << "/" << capacity << ")";
-
-    cout << "[";
-    // iterate over the array and print
-    for (int i = 0; i < size; i++, walker++)
+template <class T>
+void print(T *a, unsigned int how_many, ostream &outs)
+{
+    T *walkman = a;
+    for (int i = 0; i < how_many; i++, walkman++)
     {
-        cout << *walker << "|";
+        cout << " | " << *walkman << " | ";
     }
-    cout << "]\n";
-}
-// postcondition: printed all the elements in the array
 
-// precondition: an array has been created
-template <class T>
-void print(T *a, unsigned int how_many)
-{
+} // print array
 
-    // they are the same functions
-    print_array(a, how_many);
-}
-// postcondition: printed all the elements in the array
-
-// precondition: an array has been initialized, find_me index has
-// been determined
 template <class T>
 T *search_entry(T *a, int size, const T &find_me)
 {
-
-    // create a walker that points to the start of the array
-    T *walker = a;
-
-    // iterate over the array and check
-    for (int i = 0; i < size; i++, walker++)
+    T *walkman = a;
+    for (int i = 0; i < size; i++, walkman++)
     {
-        if (*walker == find_me)
+        if (*walkman == find_me)
         {
-            return walker; // return the pointer
+            return walkman;
         }
     }
+    return nullptr;
+    // returns pointer of the memory location of find_me
+} // search for 'find me'
 
-    cout << "Element not found in the array";
-    return nullptr; // if find_me wasn't found
-}
-// postcondition: the pointer to the found index or nullptr has been returned
-
-// precondition: an array has been initialized, find_me index has
-// been determined
 template <class T>
 int search(T *a, int size, const T &find_me)
 {
-    // create a walker that points to the start of the array
-    T *walker = a;
-
-    // iterate over the array and check
-    for (int i = 0; i < size; i++, walker++)
+    T *walkman = a;
+    for (int i = 0; i < size; i++, walkman++)
     {
-        if (*walker == find_me)
+        // cout<<i<<" ";
+        if (*walkman == find_me)
         {
-            return i; // return the index
+            return i;
         }
     }
+    return -1;
+} // search for 'find_me'
 
-    cout << "Element not found in the array";
-    return -1; // if find_me wasn't found
-}
-// postcondition: the index of find_me or -1 has been returned
-
-// precondition: an array has been initialized
 template <class T>
 void shift_left(T *a, int &size, int shift_here)
 {
-    // if given index is negative
-    assert(shift_here >= 0);
-
-    // if index is out of range
-    assert(shift_here < size);
-
-    // walker pointing to the end of the array
-    T *end = a + (size - 1);
-
-    // create a walker that points to the index
-    T *walker = a + shift_here;
-
-    // create a second walker to that points to to the index
-    // that comes after
-    T *walker2 = walker + 1;
-
-    while (walker != end)
+    if (shift_here <= size && shift_here >= 0)
     {
-        *walker = *walker2;
-        // move pointers to the right
-        walker++;
-        walker2++;
+        T *walkman = a + (shift_here);
+        shift_left(a, size, walkman);
     }
-
-    // reduce the size of the array
-    size--;
-}
-// postcondition: all the elements after 'shift_here' have been shifted to left
-// size of the array is decremented by 1
-
-// precondition: an array has been initialized
+    else
+    {
+        cout << "Cannot shift left\n";
+        return;
+    }
+} // shift left @ pos:
+  //     erases @ pos
 template <class T>
 void shift_left(T *a, int &size, T *shift_here)
 {
-    // calculate distance from the first element of the array and the shift_here element
-    int distance = shift_here - a;
-
-    shift_left(a, size, distance); // recall the already defined function
+    if (shift_here <= a + size && shift_here >= a)
+    {
+        T *limit = a + (size - 1);
+        int count = limit - shift_here;
+        T *walkman = shift_here;
+        for (int i = 0; i < count; i++, walkman++)
+        {
+            T *tempo = (walkman + 1);
+            *walkman = *tempo;
+        }
+        size--;
+    }
+    else
+    {
+        cout << "Cannot shift left\n";
+        return;
+    }
 }
-// postcondition: all the elements after 'shift_here' have been shifted to left
-// size of the array is decremented by 1
-
-// precondition: an array has been initialized
+//    erases @ pos
 template <class T>
 void shift_right(T *a, int &size, int shift_here)
 {
-    // if given index is negative
-    assert(shift_here >= 0);
-
-    // if index is out of range
-    assert(shift_here < size);
-
-    // pointer that points to the shift_here index
-    T *shift_here_ptr = a + shift_here;
-
-    // create a walker that points to one index after the end of the array
-    T *walker = a + size;
-
-    // create a second walker to that points to the end of the array
-    T *walker2 = walker - 1;
-
-    while (walker != shift_here_ptr)
+    if (shift_here <= size && shift_here >= 0)
     {
-        *walker = *walker2;
-        // move pointers to the left
-        walker--;
-        walker2--;
+        T *limit = a + shift_here;
+        shift_right(a, size, limit);
     }
+    else
+    {
+        cout << "Cannot shift right\n";
+        return;
+    }
+} //      make a hole
 
-    // increment the size of the array
-    size++;
-};
-// postcondition: all the elements after 'shift_here' have been shifted to right
-// size of the array is incremented by 1
-
-// precondition: an array has been initialized
 template <class T>
 void shift_right(T *a, int &size, T *shift_here)
 {
-    // calculate distance from the first element of the array and the shift_here element
-    int distance = shift_here - a;
+    if (shift_here >= a && shift_here <= a + size)
+    {
+        size++;
+        T *walkman = (a + size - 1);
+        int count = walkman - shift_here;
+        for (int i = 0; i < count; i++, walkman--)
+        {
+            T *tempo = (walkman - 1);
+            *walkman = *tempo;
+        }
+    }
+    else
+    {
+        cout << "Cannot shift right\n";
+        return;
+    }
+} // shift right:
+  //    make a hole
 
-    shift_right(a, size, distance); // recall the already defined function
-};
-// postcondition: all the elements after 'shift_here' have been shifted to right
-// size of the array is incremented by 1
+template <class T>
+void copy_array(T *dest, const T *src, int many_to_copy)
+{
+    assert(!(src == nullptr));
+    if (dest == nullptr)
+    {
+        dest = allocate<T>(many_to_copy);
+    }
+    T *dest_ptr = dest;
+    const T *src_ptr = src;
+    // const T* n_src =  src;
+    int i = many_to_copy;
+    while (i > 0)
+    {
+        *dest_ptr = *src_ptr;
+        src_ptr++;
+        dest_ptr++;
+        i--;
+    }
+} // copy from src to dest
 
-// precondition: source array and dynamic have been created
 template <class T>
 T *copy_array(const T *src, int size)
 {
-    T *arr_copy = new T[size];       // create a dynamic array of size "size"
-    copy_array(arr_copy, src, size); // copy the src array into the arr_copy
+    T *a = allocate<T>(size);
+    const T *n_src = src;
+    copy_array(a, n_src, size);
+    return a;
+} // return a
+  //   copy of src
+template <class T>
+void append(T *a, int &size, T append_me);
 
-    return arr_copy;
-};
-// postcondition: returned the destination array that has the copied elements
-// of the source array
-
-// precondition: an array has been created
 template <class T>
 string array_string(const T *a, int size)
 {
-    char character; // if it was array of characters
-    // initialize the result string
-    string result = "";
-
-    // create a walker that walks through the array
-    const T *walker = a;
-
-    // iterate through the array
-    for (int i = 0; i < size; i++, walker++)
+    string test = "";
+    const T *walkman = a;
+    for (int i = 0; i < size; i++, walkman++)
     {
-        // if the element is a character
-        if (isalpha(*walker))
-        {
-            character = *walker;
-            result = result + character + " ";
-        }
-        // if the element is an int, double or others
+        if (typeid(char) != typeid(*walkman))
+            test += to_string(*walkman);
         else
-        {
-            result = result + to_string(*walker) + " ";
-        }
+            test += *walkman;
     }
+    return test;
+} // return array
+  //   as a string
 
-    return result;
-}
-// postcondition: returned the array as a string
-
-// precondition: an array has been created
-template <typename T>
-void append_array(T *arr, int &size, T value)
-{
-    T *walker = arr + size;
-    *walker = value;
-    size++;
-}
-// postcondition: an element has been added to the back of the array. size has been incremented
+#include "student.cpp"
 
 #endif

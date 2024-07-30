@@ -5,85 +5,71 @@
 #include <set>
 #include <vector>
 #include <list>
-#include "../../includes/poly/poly.h"
-#include "../../includes/array_functions/array_functions.h"
-// #include "../../includes/poly/poly_student.cpp"
+#include "../../includes/vector/vector_class.h"
 
 using namespace std;
-bool stub(bool debug = false)
-{
+bool stub(bool debug = false){
   return true;
 }
-
-bool basic_test(bool debug = false)
-{
-  double coefs1[] = {8.0, 5.0, 6.0, 0.0, 4.0};
-  double coefs2[] = {2.0, 7.0, 3.0, 0.0, 1.0, 9.0};
-  Poly p(coefs1, 4);
-  Poly q(coefs2, 5);
-  cout << "p: " << p << endl;
-  cout << "q: " << q << endl;
-  cout << "--------------------------------" << endl;
-  cout << "p + q   : " << p + q << endl;
-  cout << "p - q   : " << p - q << endl;
-  cout << "p * q   : " << p * q << endl;
-  cout << "p / q   : " << p / q << endl;
-  cout << "p % q   : " << p % q << endl;
-  cout << "q / p   : " << q / p << endl;
-  cout << "q % p   : " << q % p << endl;
-  cout << endl;
-  cout << "(p+q) - p == q? " << boolalpha << ((p + q) - p == q) << endl;
-  cout << "        p != q? " << boolalpha << (p != q) << endl;
-  cout << "        p != p? " << boolalpha << (p != p) << endl;
-  double *c = p.get_coefs();
-  cout << "        p.order(): " << p.order() << endl;
-
-  double coefs3[] = {0.0, 0.0, 0.0, 4.0, 5.0, 0.0, 0.0};
-  Poly r(coefs3, 6);
-  cout << "r: " << r << endl;
-  cout << "r.order(): " << r.order() << endl;
-  r.fix_order(); // should be called from the object
-  cout << "r.fixorder(): " << r << endl;
-
-  cout
-      << "\n\n---------------- D O N E -------------" << endl;
+bool test_vector(bool debug = false){
+  int a[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  Vector<int> v(a, 10);
+  cout << v << endl;
+  v[0] = 100;
+  cout << v << endl;
+  v.at(1) = 101;
+  cout << v << endl;
+  v.front() = 1000;
+  v.back() = 99;
+  cout << v << endl;
+  v += 10;
+  cout << v << endl;
+  v.insert(3, 300);
+  cout << v << endl;
+  v.erase(5);
+  cout << v << endl;
+  cout << "8 is at index: [" << v.index_of(8) << "]"<<endl;
+  cout << "vector size is now: " << v.size() << endl;
+  cout << "vector capacity is now: " << v.capacity() << endl;
+  v += 12;
+  v += 13;
+  cout << "vector capacity is now: " << v.capacity() << endl;
+  cout << v << endl;
+  cout << "vector is empty: " << boolalpha << v.empty() << endl;
+  cout << "\n\n-------- D O N E -------------\n" << endl;
   return true;
 }
-//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-// Lord help me!
+//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+//Lord help me! 
 bool debug = false;
-//----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+//----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
 
-TEST(TEST_BASIC_TEST, BasicTest)
-{
-  bool success = basic_test(debug);
+TEST(TEST_BASIC_TEST, BasicTest) {
+  bool success = test_vector(debug);
   EXPECT_EQ(success, true);
 }
 
-int main(int argc, char **argv)
-{
-  if (argc > 1)
-  {
-    debug = argv[1][0] == 't';
+
+int main(int argc, char **argv) {
+  if (argc>1){
+    debug = argv[1][0]=='t';
   }
   ::testing::InitGoogleTest(&argc, argv);
-  std::cout << "\n\n----------running basic_test.cpp---------\n\n"
-            << std::endl;
+  std::cout<<"\n\n----------running basic_test.cpp---------\n\n"<<std::endl;
   return RUN_ALL_TESTS();
 }
 
-/*
 
+
+
+/*
 includes
+├── add_entry
+│   └── add_entry.h
 ├── array_functions
 │   └── array_functions.h
-└── poly
-    ├── poly.cpp
-    ├── poly.h
-    ├── term.cpp
-    └── term.h
-
-
+└── vector
+    └── vector_class.h
 
 
 ----------running basic_test.cpp---------
@@ -93,33 +79,41 @@ includes
 [----------] Global test environment set-up.
 [----------] 1 test from TEST_BASIC_TEST
 [ RUN      ] TEST_BASIC_TEST.BasicTest
-p: [+4.0X^4 +0.0X^3 +6.0X^2 +5.0X +8.0 ]
-q: [+9.0X^5 +1.0X^4 +0.0X^3 +3.0X^2 +7.0X +2.0 ]
---------------------------------
-p + q   : [+9.0X^5 +5.0X^4 +0.0X^3 +9.0X^2 +12.0X +10.0 ]
-p - q   : [-9.0X^5 +3.0X^4 +0.0X^3 +3.0X^2 -2.0X +6.0 ]
-p * q   : [+36.0X^9 +4.0X^8 +54.0X^7 +63.0X^6 +105.0X^5 +34.0X^4 +57.0X^3 +71.0X^2 +66.0X +16.0 ]
-p / q   : [+0.0 ]
-p % q   : [+4.0X^4 +0.0X^3 +6.0X^2 +5.0X +8.0 ]
-q / p   : [+2.2X +0.2 ]
-q % p   : [-13.5X^3 -9.8X^2 -12.2X +0.0 ]
+(10/12) [    0     1     2     3     4     5     6     7     8     9 ]
 
-(p+q) - p == q? true
-        p != q? true
-        p != p? false
-        p.order(): 4
-r: [+5.0X^4 +4.0X^3 +0.0X^2 +0.0X +0.0 ]
-r.order(): 4
-r.fixorder(): [+5.0X^4 +4.0X^3 +0.0X^2 +0.0X +0.0 ]
+(10/12) [  100     1     2     3     4     5     6     7     8     9 ]
+
+(10/12) [  100   101     2     3     4     5     6     7     8     9 ]
+
+(10/12) [ 1000   101     2     3     4     5     6     7     8    99 ]
+
+(11/12) [ 1000   101     2     3     4     5     6     7     8    99    10 ]
+
+(12/12) [ 1000   101     2   300     3     4     5     6     7     8    99    10 ]
+
+(11/12) [ 1000   101     2   300     3     5     6     7     8    99    10 ]
+
+8 is at index: [8]
+vector size is now: 11
+vector capacity is now: 12
+vector capacity is now: 24
+(13/24) [ 1000   101     2   300     3     5     6     7     8    99    10    12    13 ]
+
+vector is empty: false
 
 
----------------- D O N E -------------
+-------- D O N E -------------
+
 [       OK ] TEST_BASIC_TEST.BasicTest (0 ms)
 [----------] 1 test from TEST_BASIC_TEST (0 ms total)
 
 [----------] Global test environment tear-down
-[==========] 1 test from 1 test case ran. (0 ms total)
+[==========] 1 test from 1 test case ran. (1 ms total)
 [  PASSED  ] 1 test.
-➜  build git:(begin_submodule) ✗
+➜  build git:(master) ✗ 
+
 
 */
+
+
+

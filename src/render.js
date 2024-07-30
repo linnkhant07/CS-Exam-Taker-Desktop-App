@@ -110,7 +110,7 @@ btnStudentFile.addEventListener('click', async () => {
     lastClick = "btnStudentFile";
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch('../includes/poly/poly_student.cpp');
+        const response = await fetch(`../includes/${process.env.STUDENT_SAVE_FILE}`);
         if (!response.ok) {
             throw new Error('Failed to fetch poly_student.cpp');
         }
