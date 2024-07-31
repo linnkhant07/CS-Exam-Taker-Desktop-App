@@ -7,14 +7,14 @@ const rimraf = require('rimraf');
 dotenv.config()
 
 cloneRepos = [
-    
+    /*
     {repo: process.env.INCLUDES_REPO,
     cloneFolder: "includes",
-    gitHubToken: process.env.INCLUDES_TOKEN},
+    gitHubToken: process.env.INCLUDES_TOKEN},*/
     
     
     {repo: process.env.TESTFILES_REPO,
-    cloneFolder: "_tests",
+    cloneFolder: "exam_repo",
     gitHubToken: process.env.TESTFILES_TOKEN}
 ]
 

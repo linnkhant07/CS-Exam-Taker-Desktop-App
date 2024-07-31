@@ -64,9 +64,9 @@ function createWindow() {
   ipcMain.on('show-text-editor', hideCanvas);
   ipcMain.on('exit-app', () => mainWindow.destroy());
 
-  ipcMain.on('save-test-B', (event, code) => saveFile(event, code, '../_tests/_test_files/testB.cpp', 'save-testB-reply'));
+  ipcMain.on('save-test-B', (event, code) => saveFile(event, code, '../exam_repo/_tests/_test_files/testB.cpp', 'save-testB-reply'));
   // NEEDS TO BE DYNAMIC
-  ipcMain.on('save-student-file', (event, code) => saveFile(event, code, `../includes/${process.env.STUDENT_SAVE_FILE}`, 'save-student-file-reply'));
+  ipcMain.on('save-student-file', (event, code) => saveFile(event, code, `../exam_repo/includes/${process.env.STUDENT_SAVE_FILE}`, 'save-student-file-reply'));
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

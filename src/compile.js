@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 function compileCpp(fileName) {
-    const parentDir = path.resolve(__dirname, '..');
+    const parentDir = path.resolve(__dirname, '../exam_repo');
     let output = '';
 
     function clearOutput() {

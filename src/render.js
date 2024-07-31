@@ -44,7 +44,7 @@ editor = ace.edit(editor, {
 document.addEventListener('DOMContentLoaded', async ()=>{
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch('../_tests/_test_files/basic_test.cpp');
+        const response = await fetch('../exam_repo/_tests/_test_files/basic_test.cpp');
         if (!response.ok) {
             throw new Error('Failed to fetch testB.cpp');
         }
@@ -66,7 +66,7 @@ btnBasicTest.addEventListener('click', async () => {
     lastClick = "btnBasicTest";
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch('../_tests/_test_files/basic_test.cpp');
+        const response = await fetch('../exam_repo/_tests/_test_files/basic_test.cpp');
         if (!response.ok) {
             throw new Error('Failed to fetch baisc_test.cpp');
         }
@@ -88,7 +88,7 @@ btnTestB.addEventListener('click', async () => {
     lastClick = "btnTestB";
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch('../_tests/_test_files/testB.cpp');
+        const response = await fetch('../exam_repo/_tests/_test_files/testB.cpp');
         if (!response.ok) {
             throw new Error('Failed to fetch testB.cpp');
         }
@@ -110,7 +110,7 @@ btnStudentFile.addEventListener('click', async () => {
     lastClick = "btnStudentFile";
     try {
         // Fetch the content of basic_test.cpp
-        const response = await fetch(`../includes/${process.env.STUDENT_SAVE_FILE}`);
+        const response = await fetch(`../exam_repo/includes/${process.env.STUDENT_SAVE_FILE}`);
         if (!response.ok) {
             throw new Error('Failed to fetch poly_student.cpp');
         }
